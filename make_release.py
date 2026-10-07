@@ -166,10 +166,19 @@ def smoke_test(zpath: Path, work: Path):
     alive = p.poll() is None
     if alive:
         p.kill()
-    shutil.rmtree(t, ignore_errors=True)
     if not alive:
         raise SystemExit('smoke test: the extracted exe exited early (code %s)' % p.returncode)
     print('smoke test: extracted exe starts and stays up')
+    echo = os.environ.get('ARENACOLOURS_ECHO', str(Path('C:/Oculus/Games/Software/Software/ready-at-dawn-echo-arena')))
+    if Path(echo, 'bin', 'win10', 'echovr.exe').is_file():
+        report = work / 'selftest.txt'
+        code = subprocess.run([str(exe), '--selftest', echo, str(report)]).returncode
+        text = report.read_text() if report.exists() else ''
+        print(text.strip().splitlines()[-2:] if text else '(no report)')
+        if code != 0 or 'SELFTEST OK' not in text:
+            raise SystemExit('self-test failed: ' + text)
+        print('self-test: the frozen build reads Echo, runs evrtool and finds the arena')
+    shutil.rmtree(t, ignore_errors=True)
 
 
 def main():

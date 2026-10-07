@@ -452,7 +452,30 @@ def app_icon() -> QIcon:
     return QIcon(pm)
 
 
+def selftest(echo_root: str, out_file: str) -> int:
+    """--selftest <echo folder> <report>: run the real discovery pass from this build, no GUI."""
+    lines = []
+    try:
+        inst = EchoInstall(Path(echo_root))
+        probs = inst.problems()
+        if probs:
+            raise RuntimeError(probs[0])
+        ws = Path(os.environ.get('TEMP', '.')) / 'ArenaColours_selftest'
+        b = pipeline.Builder(inst, None, ws, ColourSettings(), log=lines.append)
+        b.discover()
+        lines.append('SELFTEST OK %s' % __version__)
+        code = 0
+    except Exception:
+        lines.append(traceback.format_exc())
+        lines.append('SELFTEST FAILED')
+        code = 1
+    Path(out_file).write_text(chr(10).join(lines))
+    return code
+
+
 def main():
+    if len(sys.argv) >= 4 and sys.argv[1] == '--selftest':
+        sys.exit(selftest(sys.argv[2], sys.argv[3]))
     app = QApplication(sys.argv)
     app.setStyleSheet(STYLE)
     app.setWindowIcon(app_icon())
