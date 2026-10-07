@@ -5,6 +5,14 @@ Echo's blue team becomes one colour and its orange team another, everywhere in t
 maps: walls, geos, glows, lights, reflections, scoreboards, score displays, goals, disc.
 Every other map keeps its stock look.
 
+## Requirement: a plugin loader
+
+**ArenaColours needs an Echo VR plugin loader** -- a `dbgcore.dll` next to `echovr.exe`
+(`ready-at-dawn-echo-arena\bin\win10`) that loads the DLLs in `bin\win10\plugins`. It is not
+included. Without it the runtime plugin never loads, so the goals, holo blocks, disc glow and
+light, and scoreboard bars stay blue and orange; only the colours baked into the game files
+change. The app warns after installing if no `dbgcore.dll` is found.
+
 ## Use
 
 Run `ArenaColours.exe` (or `ArenaColours.bat` with Python + `app/requirements.txt`).
@@ -47,3 +55,6 @@ app downloads its installer on request and sets its disc colours to match.
 - `plugin/` -- `build.bat` (MSVC + Detours) -> `out/ArenaColours.dll`, copied to `app/bin/`.
 - `evrtool/` -- `go build -o ../app/bin/evrtool.exe .` (Echo package get/list/find/repack/restore over EvrFile).
 - `app/` -- PySide6 app; `pyinstaller ArenaColours.spec` for the standalone exe.
+- **Release:** `python make_release.py` builds the plugin, `evrtool` and the exe, adds the quick-start
+  and licences, zips `ArenaColours-<version>-win64.zip` (+ `.sha256`), then smoke-tests the extracted
+  copy and runs its `--selftest` against your Echo install. The version lives in `app/version.py`.

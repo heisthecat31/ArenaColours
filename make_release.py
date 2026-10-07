@@ -34,8 +34,16 @@ QUICKSTART = """ArenaColours {v}
 Recolours Echo VR's arena (mpl_arena_a and mpl_lobby_b_arena) -- blue team and orange team
 become colours you pick. Every other map stays stock.
 
+*** REQUIRED: AN ECHO VR PLUGIN LOADER ***
+ArenaColours needs a plugin loader installed in Echo VR: a dbgcore.dll next to echovr.exe
+(in ready-at-dawn-echo-arena\\bin\\win10) that loads the DLLs in bin\\win10\\plugins.
+ArenaColours does not include one. Without it the ArenaColours plugin never loads, and the
+goals, holo blocks, disc glow and light, and scoreboard bars stay blue and orange (only the
+parts baked into the game files change). The app warns you after installing if no
+dbgcore.dll is found.
+
 QUICK START
-1. Close Echo VR.
+1. Make sure your plugin loader is installed (see above), then close Echo VR.
 2. Run ArenaColours\\ArenaColours.exe (no install needed; keep the folder together).
 3. Folders: your ready-at-dawn-echo-arena folder is found automatically if it is in a
    standard Oculus location. If you already use other package mods, point "Mod folder" at
@@ -48,10 +56,8 @@ To undo: Restore stock arena.
 
 REQUIREMENTS
 - Echo VR for PC, final build (the one installed by the Oculus/Meta app), Windows 10/11.
-- Runtime colours (goals, holo blocks, disc, scoreboard bars) come from the ArenaColours
-  plugin, which the app copies to bin\\win10\\plugins. It needs an Echo plugin loader
-  (dbgcore.dll next to echovr.exe). Without one, everything baked into the files is still
-  recoloured; only those runtime-coloured parts keep their stock colours.
+- An Echo VR plugin loader (dbgcore.dll next to echovr.exe) -- REQUIRED, see the top. The
+  app copies its runtime plugin to bin\\win10\\plugins\\ArenaColours.dll for it to load.
 - Optional: "Install DiscGlow" downloads github.com/bollko/Echo-Restoration's installer
   (personal disc colour, sticky team colour) and sets its disc colours to match.
 
